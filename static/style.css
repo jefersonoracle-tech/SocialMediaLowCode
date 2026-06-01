@@ -333,10 +333,48 @@ textarea { resize: vertical; min-height: 80px; }
   margin-top: 16px;
   transition: all 0.15s;
   letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .btn-buscar:hover { background: var(--accent-glow); }
-.btn-buscar:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-buscar:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--accent-glow);
+  border-top-color: var(--accent2);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Skeleton loading */
+.temas-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.skeleton-card {
+  height: 82px;
+  background: linear-gradient(90deg, var(--bg3) 25%, var(--border) 50%, var(--bg3) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius);
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
 .temas-header {
   display: flex;
@@ -426,6 +464,38 @@ textarea { resize: vertical; min-height: 80px; }
 }
 
 .tema-card.selected .tema-check { opacity: 1; }
+
+.tema-card.recomendado {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.tema-card.recomendado:hover {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.tema-card.recomendado.selected {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.badge-recomendado {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 20px;
+  padding: 2px 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  width: fit-content;
+}
 
 /* ── FORMAT GRID ── */
 .format-grid {

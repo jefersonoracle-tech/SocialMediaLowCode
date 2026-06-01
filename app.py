@@ -59,7 +59,7 @@ def buscar_temas():
     if not nicho:
         return jsonify({"error": "Nicho é obrigatório."}), 400
 
-    prompt = f"""Pesquise na internet os temas mais relevantes e em alta agora para conteúdo educativo no Instagram no nicho de "{nicho}".
+    prompt = f"""Pesquise na internet os temas mais relevantes e em alta agora para conteúdo no Instagram no nicho de "{nicho}".
 
 Contexto:
 - Público-alvo: {publico or 'geral'}
@@ -67,18 +67,25 @@ Contexto:
 
 Busque tendências recentes, assuntos em alta, dúvidas frequentes e temas com potencial viral para este nicho.
 
+Analise cada tema levando em conta:
+1. Tendência atual (volume de busca e crescimento)
+2. Aderência ao público-alvo informado
+3. Alinhamento com o objetivo do post
+4. Potencial de engajamento no Instagram
+
 Retorne SOMENTE um JSON válido, sem markdown, sem explicações fora do JSON:
 {{
   "temas": [
     {{
       "titulo": "título curto e direto (máx 8 palavras)",
       "descricao": "por que este tema está em alta e tem potencial de engajamento (1-2 frases)",
-      "angulo": "ângulo específico e original para o post"
+      "angulo": "ângulo específico e original para o post",
+      "recomendado": false
     }}
   ]
 }}
 
-Sugira entre 5 e 6 temas ordenados do maior para o menor potencial."""
+Sugira entre 5 e 6 temas. Marque com "recomendado": true APENAS o tema com maior score combinado de tendência + aderência ao público + objetivo. Apenas 1 tema pode ser recomendado."""
 
     try:
         client = get_client()

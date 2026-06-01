@@ -102,9 +102,17 @@ async function buscarTemas() {
   txt.classList.add('hidden');
   load.classList.remove('hidden');
 
-  // Limpa seleção anterior
+  // Limpa seleção anterior e mostra skeleton
   document.getElementById('temaSelecionado').value = '';
-  document.getElementById('temasContainer').classList.add('hidden');
+  const temasContainer = document.getElementById('temasContainer');
+  const temasList = document.getElementById('temasList');
+  temasList.innerHTML = `
+    <div class="temas-skeleton">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </div>`;
+  temasContainer.classList.remove('hidden');
 
   try {
     const resp = await fetch('/api/buscar-temas', {
@@ -121,7 +129,7 @@ async function buscarTemas() {
     renderTemas(data.temas);
 
   } catch (err) {
-    alert('Erro ao buscar temas: ' + err.message);
+    temasList.innerHTML = `<div style="color:#ef4444;font-size:13px;padding:12px 0">⚠️ ${escapeHtml(err.message)}</div>`;
   } finally {
     btn.disabled = false;
     txt.classList.remove('hidden');
@@ -133,12 +141,17 @@ function renderTemas(temas) {
   const list = document.getElementById('temasList');
   list.innerHTML = '';
 
+  let autoSelectCard = null;
+  let autoSelectTema = null;
+
   temas.forEach((tema, i) => {
+    const isRec = tema.recomendado === true;
     const card = document.createElement('div');
-    card.className = 'tema-card';
+    card.className = 'tema-card' + (isRec ? ' recomendado' : '');
     card.innerHTML = `
-      <span class="tema-rank">${i + 1}</span>
+      <span class="tema-rank" style="${isRec ? 'background:rgba(245,158,11,0.2);color:#f59e0b' : ''}">${i + 1}</span>
       <div class="tema-info">
+        ${isRec ? '<div class="badge-recomendado">⭐ Recomendado para você</div>' : ''}
         <div class="tema-titulo">${escapeHtml(tema.titulo)}</div>
         <div class="tema-descricao">${escapeHtml(tema.descricao)}</div>
         <div class="tema-angulo">✦ ${escapeHtml(tema.angulo)}</div>
@@ -149,14 +162,20 @@ function renderTemas(temas) {
     card.addEventListener('click', () => {
       document.querySelectorAll('.tema-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
-      document.getElementById('temaSelecionado').value =
-        `${tema.titulo} — ${tema.angulo}`;
+      document.getElementById('temaSelecionado').value = `${tema.titulo} — ${tema.angulo}`;
     });
 
     list.appendChild(card);
+
+    if (isRec) { autoSelectCard = card; autoSelectTema = tema; }
   });
 
-  document.getElementById('temasContainer').classList.remove('hidden');
+  // Auto-seleciona o recomendado
+  if (autoSelectCard) {
+    autoSelectCard.classList.add('selected');
+    document.getElementById('temaSelecionado').value = `${autoSelectTema.titulo} — ${autoSelectTema.angulo}`;
+    autoSelectCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 
 // ── FORMATO ──────────────────────────────────────────────────────────
