@@ -41,9 +41,11 @@ FASE 5:   Produção          → Gerar prompt completo + legenda personalizados
 
 ## FASE 1 — Briefing
 
+> **⚡ ATALHO DE INTERFACE WEB:** Se a mensagem do usuário começar com `BRIEFING COMPLETO`, significa que todos os dados já foram coletados por um formulário externo. Nesse caso, **pule toda a FASE 1 e vá direto para a FASE 2**. Não faça nenhuma pergunta — nem sobre arquivo de referência, nem sobre tema, nem sobre qualquer outro dado. Use exatamente o que foi fornecido e assuma valores razoáveis para qualquer campo faltante.
+
 ### PASSO 0 — Arquivo de Referência (SEMPRE O PRIMEIRO)
 
-**Antes de qualquer outra pergunta**, pergunte:
+**Antes de qualquer outra pergunta**, pergunte — **exceto quando a mensagem começar com `BRIEFING COMPLETO`** (ver atalho acima):
 
 > "Você tem um arquivo de referência do seu perfil ou de um perfil que admira? (print do grid, posts, stories, ou captura de tela do Instagram). Se sim, envie aqui. Se não tiver, pode pular e me contar sobre o seu perfil."
 

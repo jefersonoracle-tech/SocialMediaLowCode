@@ -65,29 +65,36 @@
           <div class="card">
             <div class="card-title">
               <span class="step-badge">2</span>
-              Perfil
+              Perfil &amp; Tema
             </div>
+
             <div class="field-row">
-              <div class="field">
-                <label>@ do Instagram <span class="req">*</span></label>
-                <div class="input-prefix">
-                  <span>@</span>
-                  <input type="text" id="handle" placeholder="suapagina" required />
-                </div>
-              </div>
-              <div class="field">
+              <div class="field" style="flex:2">
                 <label>Nicho / Tema <span class="req">*</span></label>
-                <input type="text" id="nicho" placeholder="ex: marketing digital, nutrição, F1…" required />
+                <input type="text" id="nicho" placeholder="ex: futebol, marketing digital, nutrição…" required />
               </div>
             </div>
+
             <div class="field-row">
               <div class="field">
                 <label>Público-alvo <span class="req">*</span></label>
-                <input type="text" id="publico" placeholder="ex: empreendedores iniciantes" required />
+                <select id="publico" required>
+                  <option value="">Selecione…</option>
+                  <option>Iniciantes no assunto</option>
+                  <option>Jovens (18-25 anos)</option>
+                  <option>Adultos (26-40 anos)</option>
+                  <option>Profissionais da área</option>
+                  <option>Empreendedores e gestores</option>
+                  <option>Estudantes universitários</option>
+                  <option>Atletas e praticantes</option>
+                  <option>Fãs e entusiastas do nicho</option>
+                  <option>Mães e famílias</option>
+                  <option>Público geral</option>
+                </select>
               </div>
               <div class="field">
-                <label>Objetivo</label>
-                <select id="objetivo">
+                <label>Objetivo <span class="req">*</span></label>
+                <select id="objetivo" required>
                   <option value="">Selecione…</option>
                   <option>Gerar autoridade</option>
                   <option>Atrair leads</option>
@@ -97,15 +104,39 @@
                 </select>
               </div>
             </div>
+
+            <button type="button" class="btn-buscar" id="btnBuscarTema">
+              <span id="btnBuscarText">🔍 Buscar Temas em Alta</span>
+              <span id="btnBuscarLoading" class="hidden">⏳ Pesquisando…</span>
+            </button>
+
+            <!-- Resultado da busca -->
+            <div id="temasContainer" class="hidden">
+              <div class="temas-header">
+                <span>Selecione o tema do post</span>
+                <span class="temas-sub">Baseado em tendências atuais do nicho</span>
+              </div>
+              <div id="temasList" class="temas-list"></div>
+            </div>
+
+            <!-- Tema selecionado (hidden field) -->
+            <input type="hidden" id="temaSelecionado" />
           </div>
 
-          <!-- TOM E LINHA EDITORIAL -->
+          <!-- PERFIL DO INSTAGRAM -->
           <div class="card">
             <div class="card-title">
               <span class="step-badge">3</span>
-              Tom &amp; Linha Editorial
+              Perfil do Instagram
             </div>
             <div class="field-row">
+              <div class="field">
+                <label>@ do Instagram <span class="req">*</span></label>
+                <div class="input-prefix">
+                  <span>@</span>
+                  <input type="text" id="handle" placeholder="suapagina" required />
+                </div>
+              </div>
               <div class="field">
                 <label>Tom de voz</label>
                 <select id="tom">
@@ -117,6 +148,8 @@
                   <option>Técnico e analítico</option>
                 </select>
               </div>
+            </div>
+            <div class="field-row">
               <div class="field">
                 <label>Linha editorial</label>
                 <select id="linha">
@@ -130,10 +163,6 @@
                   <option>Collabs</option>
                 </select>
               </div>
-            </div>
-            <div class="field">
-              <label>Tema específico do post <span class="optional">(deixe em branco para a IA escolher)</span></label>
-              <input type="text" id="tema" placeholder="ex: 3 erros que todo iniciante comete em investimentos" />
             </div>
           </div>
 
