@@ -319,6 +319,114 @@ textarea { resize: vertical; min-height: 80px; }
   justify-content: center;
 }
 
+/* ── BUSCAR TEMA ── */
+.btn-buscar {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent2);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.btn-buscar:hover { background: var(--accent-glow); }
+.btn-buscar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.temas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 20px 0 12px;
+}
+
+.temas-header span:first-child {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.temas-sub {
+  font-size: 12px;
+  color: var(--text2);
+}
+
+.temas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tema-card {
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tema-card:hover { border-color: var(--accent2); background: var(--bg3); }
+
+.tema-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.tema-rank {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent2);
+  background: var(--accent-glow);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.tema-info { flex: 1; }
+
+.tema-titulo {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.tema-descricao {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.tema-angulo {
+  font-size: 11px;
+  color: var(--accent2);
+  font-style: italic;
+}
+
+.tema-check {
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.tema-card.selected .tema-check { opacity: 1; }
+
 /* ── FORMAT GRID ── */
 .format-grid {
   display: grid;

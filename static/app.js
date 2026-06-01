@@ -73,6 +73,92 @@ function loadImage(file) {
   reader.readAsDataURL(file);
 }
 
+// ── BUSCAR TEMAS ─────────────────────────────────────────────────────
+document.getElementById('btnBuscarTema').addEventListener('click', buscarTemas);
+
+async function buscarTemas() {
+  const nicho   = document.getElementById('nicho').value.trim();
+  const publico = document.getElementById('publico').value.trim();
+  const objetivo = document.getElementById('objetivo').value.trim();
+
+  if (!nicho) {
+    document.getElementById('nicho').focus();
+    return;
+  }
+  if (!publico) {
+    document.getElementById('publico').focus();
+    return;
+  }
+  if (!objetivo) {
+    document.getElementById('objetivo').focus();
+    return;
+  }
+
+  const btn  = document.getElementById('btnBuscarTema');
+  const txt  = document.getElementById('btnBuscarText');
+  const load = document.getElementById('btnBuscarLoading');
+
+  btn.disabled = true;
+  txt.classList.add('hidden');
+  load.classList.remove('hidden');
+
+  // Limpa seleção anterior
+  document.getElementById('temaSelecionado').value = '';
+  document.getElementById('temasContainer').classList.add('hidden');
+
+  try {
+    const resp = await fetch('/api/buscar-temas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nicho, publico, objetivo }),
+    });
+
+    const data = await resp.json();
+
+    if (data.error) throw new Error(data.error);
+    if (!data.temas || !data.temas.length) throw new Error('Nenhum tema encontrado.');
+
+    renderTemas(data.temas);
+
+  } catch (err) {
+    alert('Erro ao buscar temas: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    txt.classList.remove('hidden');
+    load.classList.add('hidden');
+  }
+}
+
+function renderTemas(temas) {
+  const list = document.getElementById('temasList');
+  list.innerHTML = '';
+
+  temas.forEach((tema, i) => {
+    const card = document.createElement('div');
+    card.className = 'tema-card';
+    card.innerHTML = `
+      <span class="tema-rank">${i + 1}</span>
+      <div class="tema-info">
+        <div class="tema-titulo">${escapeHtml(tema.titulo)}</div>
+        <div class="tema-descricao">${escapeHtml(tema.descricao)}</div>
+        <div class="tema-angulo">✦ ${escapeHtml(tema.angulo)}</div>
+      </div>
+      <span class="tema-check">✓</span>
+    `;
+
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.tema-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      document.getElementById('temaSelecionado').value =
+        `${tema.titulo} — ${tema.angulo}`;
+    });
+
+    list.appendChild(card);
+  });
+
+  document.getElementById('temasContainer').classList.remove('hidden');
+}
+
 // ── FORMATO ──────────────────────────────────────────────────────────
 document.querySelectorAll('input[name="formato"]').forEach(radio => {
   radio.addEventListener('change', () => {
@@ -89,27 +175,26 @@ document.getElementById('briefingForm').addEventListener('submit', async e => {
 
 function buildBriefing() {
   const v = id => document.getElementById(id).value.trim();
-  const formato   = document.querySelector('input[name="formato"]:checked').value;
-  const paleta    = document.querySelector('input[name="paleta"]:checked').value;
-  const handle    = v('handle');
-  const nicho     = v('nicho');
-  const publico   = v('publico');
-  const objetivo  = v('objetivo');
-  const tom       = v('tom');
-  const linha     = v('linha');
-  const tema      = v('tema');
-  const obs       = v('observacoes');
-  const numSlides = v('numSlides');
+  const formato        = document.querySelector('input[name="formato"]:checked').value;
+  const paleta         = document.querySelector('input[name="paleta"]:checked').value;
+  const handle         = v('handle');
+  const nicho          = v('nicho');
+  const publico        = v('publico');
+  const objetivo       = v('objetivo');
+  const tom            = v('tom');
+  const linha          = v('linha');
+  const temaSelecionado = v('temaSelecionado');
+  const obs            = v('observacoes');
+  const numSlides      = v('numSlides');
 
-  let msg = `BRIEFING COMPLETO (pule a FASE 1 e execute direto as FASES 2→5):\n`;
+  let msg = `BRIEFING COMPLETO (pule as FASES 2 e 3 — tema já definido — execute direto FASES 4 e 5):\n`;
   msg += `- @ do Instagram: @${handle.replace(/^@/, '')}\n`;
   msg += `- Nicho/Tema: ${nicho}\n`;
   msg += `- Público-alvo: ${publico}\n`;
   if (objetivo)  msg += `- Objetivo: ${objetivo}\n`;
   if (tom)       msg += `- Tom de voz: ${tom}\n`;
-  if (linha)     msg += `- Linha editorial: ${linha}\n`;
-  if (tema)      msg += `- Tema do post: ${tema}\n`;
-  else           msg += `- Tema do post: (escolher o melhor tema com base na pesquisa de tendências)\n`;
+  if (linha)          msg += `- Linha editorial: ${linha}\n`;
+  if (temaSelecionado) msg += `- Tema do post (já definido, use exatamente este): ${temaSelecionado}\n`;
   msg += `- Paleta tonal: ${paleta}\n`;
   msg += `- Formato: ${formato}`;
   if (formato === 'Carrossel' && numSlides) msg += ` com ${numSlides} slides`;
