@@ -38,9 +38,9 @@ SLIDE - [NOME EM MAIÚSCULAS]
 ========================================
 
 [PROMPT_IMAGEM]
-Crie uma imagem vertical para Instagram.
-[Descreva APENAS a cena visual: ambiente, pessoas, objetos, iluminação, atmosfera, cores.]
-[NÃO inclua instruções de texto, layout, marca d'água ou posicionamento de copy.]
+Descreva APENAS a cena visual: ambiente, pessoas, objetos, iluminação, atmosfera, cores, composição fotográfica.
+PROIBIDO incluir qualquer texto, título, legenda, copy, marca d'água, balão de fala, tipografia ou elemento gráfico com palavras na imagem.
+A imagem deve ser totalmente limpa de texto — o texto do post será adicionado digitalmente por cima depois.
 [/PROMPT_IMAGEM]
 
 [TEXTO_OVERLAY]
