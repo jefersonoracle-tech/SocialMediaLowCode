@@ -302,6 +302,10 @@ function buildBriefing() {
   return msg;
 }
 
+// ── POST PREVIEW STATE ────────────────────────────────────────────────
+let parsedSlides = [];
+let currentSlideIdx = 0;
+
 async function generate() {
   const btn     = document.getElementById('btnGenerate');
   const btnText = document.getElementById('btnText');
@@ -311,18 +315,18 @@ async function generate() {
   btnText.classList.add('hidden');
   btnLoad.classList.remove('hidden');
 
-  // Switch to result section
   switchSection('resultado');
 
-  const container = document.getElementById('resultado-content');
-  container.innerHTML = `
-    <div class="progress-bar"><div class="progress-fill"></div></div>
-    <div class="output-streaming" id="streamOutput"></div>
-  `;
+  // Show streaming state
+  const emptyState   = document.getElementById('emptyState');
+  const resultLayout = document.getElementById('resultLayout');
+  const streamDiv    = document.getElementById('resultado-stream');
+
+  resultLayout.classList.add('hidden');
+  emptyState.classList.add('hidden');
+  streamDiv.innerHTML = `<div class="output-streaming" id="streamOutput"><span class="cursor"></span></div>`;
 
   const streamOutput = document.getElementById('streamOutput');
-  streamOutput.innerHTML = '<span class="cursor"></span>';
-
   let fullText = '';
 
   try {
@@ -340,7 +344,7 @@ async function generate() {
       throw new Error(err.error || `HTTP ${resp.status}`);
     }
 
-    const reader = resp.body.getReader();
+    const reader  = resp.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
 
@@ -356,7 +360,7 @@ async function generate() {
         if (!line.startsWith('data: ')) continue;
         const raw = line.slice(6).trim();
         if (raw === '[DONE]') {
-          renderResult(fullText, container);
+          renderResult(fullText);
           return;
         }
         try {
@@ -367,22 +371,14 @@ async function generate() {
             streamOutput.innerHTML = escapeHtml(fullText) + '<span class="cursor"></span>';
             streamOutput.scrollTop = streamOutput.scrollHeight;
           }
-        } catch (parseErr) {
-          if (parseErr.message !== 'Unexpected token') throw parseErr;
-        }
+        } catch (parseErr) { /* ignore partial JSON */ }
       }
     }
 
-    if (fullText) renderResult(fullText, container);
+    if (fullText) renderResult(fullText);
 
   } catch (err) {
-    container.innerHTML = `
-      <div class="result-block">
-        <div class="result-block-header">
-          <span class="result-block-title">⚠️ Erro</span>
-        </div>
-        <div class="result-block-content">${escapeHtml(err.message)}</div>
-      </div>`;
+    streamDiv.innerHTML = `<div class="empty-state"><span>⚠️</span><p>${escapeHtml(err.message)}</p></div>`;
   } finally {
     btn.disabled = false;
     btnText.classList.remove('hidden');
@@ -390,83 +386,255 @@ async function generate() {
   }
 }
 
-// ── RENDER RESULT ─────────────────────────────────────────────────────
-function renderResult(text, container) {
-  // Split into logical blocks by separator lines or major headings
-  const blocks = splitIntoBlocks(text);
+// ── PARSE RESULT ──────────────────────────────────────────────────────
+function parseResult(text) {
+  const slides = [];
 
-  let html = '';
-  for (const block of blocks) {
-    if (!block.content.trim()) continue;
-    html += `
-      <div class="result-block">
-        <div class="result-block-header">
-          <span class="result-block-title">${escapeHtml(block.title)}</span>
-          <button class="copy-btn" onclick="copyBlock(this)">Copiar</button>
-        </div>
-        <div class="result-block-content">${renderMarkdown(block.content.trim())}</div>
-      </div>`;
-  }
+  // Split by slide separators: ========== SLIDE - NAME ==========
+  const slidePattern = /={3,}\s*SLIDE\s*[-–]?\s*([^\n=]+?)\s*={3,}/gi;
+  const slideMatches = [...text.matchAll(slidePattern)];
 
-  if (!html) {
-    html = `
-      <div class="result-block">
-        <div class="result-block-header">
-          <span class="result-block-title">✦ Conteúdo Gerado</span>
-          <button class="copy-btn" onclick="copyBlock(this)">Copiar tudo</button>
-        </div>
-        <div class="result-block-content">${renderMarkdown(text.trim())}</div>
-      </div>`;
-  }
-
-  container.innerHTML = html;
-}
-
-function splitIntoBlocks(text) {
-  // Try to find separator patterns like === SLIDE === or ## HEADING
-  const separators = [
-    /^={3,}\s*(.+?)\s*={3,}$/m,
-    /^-{3,}\s*(.+?)\s*-{3,}$/m,
-  ];
-
-  let blocks = [];
-
-  // Try separator-based split
-  const sepRegex = /={3,}.+?={3,}/g;
-  const matches = [...text.matchAll(/={3,}\s*(.+?)\s*={3,}/g)];
-
-  if (matches.length >= 2) {
-    let lastIndex = 0;
-    for (let i = 0; i < matches.length; i++) {
-      const m = matches[i];
-      const nextStart = i + 1 < matches.length ? matches[i + 1].index : text.length;
-      const content = text.slice(m.index + m[0].length, nextStart).trim();
-      if (content) {
-        blocks.push({ title: m[1].trim(), content });
-      }
-      lastIndex = nextStart;
+  if (slideMatches.length === 0) {
+    // No slide markers — treat entire text as one slide
+    slides.push(extractSlideContent('Slide 1', text));
+  } else {
+    for (let i = 0; i < slideMatches.length; i++) {
+      const m     = slideMatches[i];
+      const end   = i + 1 < slideMatches.length ? slideMatches[i + 1].index : text.length;
+      const chunk = text.slice(m.index + m[0].length, end);
+      slides.push(extractSlideContent(m[1].trim(), chunk));
     }
-    if (blocks.length > 0) return blocks;
   }
 
-  // Fallback: split by ## headings
-  const h2 = text.split(/\n(?=#{1,3} )/);
-  if (h2.length > 1) {
-    return h2.map(chunk => {
-      const firstLine = chunk.split('\n')[0].replace(/^#+\s*/, '').trim();
-      const content = chunk.split('\n').slice(1).join('\n').trim();
-      return { title: firstLine || '✦', content: content || chunk.trim() };
-    }).filter(b => b.content);
-  }
+  // Extract global sections (after all slides)
+  const legenda     = extractTag(text, 'LEGENDA');
+  const trilha      = extractTag(text, 'TRILHA_SONORA');
 
-  // Last resort: single block
-  return [{ title: '✦ Conteúdo Gerado', content: text }];
+  return { slides, legenda, trilha };
 }
 
-function renderMarkdown(text) {
-  return escapeHtml(text)
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>');
+function extractSlideContent(name, chunk) {
+  const promptImagem = extractTag(chunk, 'PROMPT_IMAGEM');
+  const textoOverlay = extractTag(chunk, 'TEXTO_OVERLAY');
+
+  let titulo    = '';
+  let subtitulo = '';
+  let badge     = '';
+
+  if (textoOverlay) {
+    const tMatch = textoOverlay.match(/TÍTULO\s*:\s*(.+)/i);
+    const sMatch = textoOverlay.match(/SUBTÍTULO\s*:\s*(.+)/i);
+    const bMatch = textoOverlay.match(/BADGE\s*:\s*(.+)/i);
+    if (tMatch) titulo    = tMatch[1].trim();
+    if (sMatch) subtitulo = sMatch[1].trim();
+    if (bMatch) badge     = bMatch[1].trim();
+  }
+
+  return { name, promptImagem, titulo, subtitulo, badge };
+}
+
+function extractTag(text, tag) {
+  const re = new RegExp(`\\[${tag}\\]([\\s\\S]*?)\\[\\/${tag}\\]`, 'i');
+  const m  = text.match(re);
+  return m ? m[1].trim() : '';
+}
+
+// ── RENDER RESULT ─────────────────────────────────────────────────────
+function renderResult(text) {
+  const parsed  = parseResult(text);
+  parsedSlides  = parsed.slides;
+  currentSlideIdx = 0;
+
+  const formato = document.querySelector('input[name="formato"]:checked').value;
+
+  // Set aspect ratio
+  const postContainer = document.getElementById('postContainer');
+  postContainer.classList.remove('ratio-45', 'ratio-916');
+  postContainer.classList.add(['Story', 'Reels'].includes(formato) ? 'ratio-916' : 'ratio-45');
+
+  // Slide tabs
+  const slideTabs = document.getElementById('slideTabs');
+  slideTabs.innerHTML = '';
+  if (parsedSlides.length > 1) {
+    parsedSlides.forEach((slide, i) => {
+      const tab = document.createElement('button');
+      tab.className = 'slide-tab' + (i === 0 ? ' active' : '');
+      tab.textContent = slide.name;
+      tab.addEventListener('click', () => switchSlide(i));
+      slideTabs.appendChild(tab);
+    });
+    slideTabs.classList.remove('hidden');
+  } else {
+    slideTabs.classList.add('hidden');
+  }
+
+  // Prompts panel
+  renderPromptsPanel(parsed);
+
+  // Show layout, hide streaming
+  document.getElementById('resultado-stream').innerHTML = '';
+  document.getElementById('resultLayout').classList.remove('hidden');
+
+  // Load first slide
+  loadSlide(0);
+
+  // Wire controls (only once via flag)
+  if (!window._controlsWired) {
+    wireControls();
+    window._controlsWired = true;
+  }
+}
+
+function switchSlide(idx) {
+  currentSlideIdx = idx;
+  document.querySelectorAll('.slide-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  loadSlide(idx);
+}
+
+function loadSlide(idx) {
+  const slide = parsedSlides[idx];
+  if (!slide) return;
+
+  document.getElementById('overlayBadge').textContent    = slide.badge    || '';
+  document.getElementById('overlayTitulo').textContent   = slide.titulo   || '';
+  document.getElementById('overlaySubtitulo').textContent = slide.subtitulo || '';
+
+  // Reset bg image for new slide (keep if same session image)
+  // (user manages image per-slide manually)
+}
+
+function renderPromptsPanel(parsed) {
+  const panel = document.getElementById('promptsPanel');
+  let html = '';
+
+  parsed.slides.forEach((slide, i) => {
+    if (slide.promptImagem) {
+      html += promptBlock(`🖼️ Prompt Imagem — ${slide.name}`, slide.promptImagem);
+    }
+  });
+
+  if (parsed.legenda) {
+    html += promptBlock('📝 Legenda', parsed.legenda);
+  }
+  if (parsed.trilha) {
+    html += promptBlock('🎵 Trilha Sonora', parsed.trilha);
+  }
+
+  panel.innerHTML = html;
+}
+
+function promptBlock(title, content) {
+  return `
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <span class="prompt-block-title">${escapeHtml(title)}</span>
+        <button class="copy-btn" onclick="copyPromptBlock(this)">Copiar</button>
+      </div>
+      <div class="prompt-block-content">${escapeHtml(content)}</div>
+    </div>`;
+}
+
+// ── BG IMAGE UPLOAD (result tab) ──────────────────────────────────────
+const imageDrop    = document.getElementById('imageDrop');
+const bgImageInput = document.getElementById('bgImageInput');
+const bgImg        = document.getElementById('bgImg');
+
+imageDrop.addEventListener('click', () => bgImageInput.click());
+
+imageDrop.addEventListener('dragover', e => {
+  e.preventDefault();
+  imageDrop.classList.add('drag-over');
+});
+imageDrop.addEventListener('dragleave', () => imageDrop.classList.remove('drag-over'));
+imageDrop.addEventListener('drop', e => {
+  e.preventDefault();
+  imageDrop.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) loadBgImage(e.dataTransfer.files[0]);
+});
+
+bgImageInput.addEventListener('change', () => {
+  if (bgImageInput.files[0]) loadBgImage(bgImageInput.files[0]);
+});
+
+function loadBgImage(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    bgImg.src = ev.target.result;
+    bgImg.style.display = 'block';
+    imageDrop.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────────
+function wireControls() {
+  // Font size
+  const ctrlFontSize    = document.getElementById('ctrlFontSize');
+  const ctrlFontSizeVal = document.getElementById('ctrlFontSizeVal');
+  ctrlFontSize.addEventListener('input', () => {
+    const px = ctrlFontSize.value + 'px';
+    ctrlFontSizeVal.textContent = px;
+    document.getElementById('overlayInner').style.fontSize = px;
+  });
+
+  // Text color
+  const ctrlColor    = document.getElementById('ctrlColor');
+  const ctrlColorVal = document.getElementById('ctrlColorVal');
+  ctrlColor.addEventListener('input', () => {
+    ctrlColorVal.textContent = ctrlColor.value;
+    document.getElementById('overlayInner').style.color = ctrlColor.value;
+  });
+
+  // Alignment
+  document.querySelectorAll('[data-align]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-align]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('overlayInner').style.textAlign = btn.dataset.align;
+    });
+  });
+
+  // Vertical position
+  document.querySelectorAll('[data-valign]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-valign]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('layerText').style.alignItems = btn.dataset.valign;
+    });
+  });
+
+  // Bold
+  const ctrlBold = document.getElementById('ctrlBold');
+  ctrlBold.addEventListener('click', () => {
+    ctrlBold.classList.toggle('active');
+    const inner = document.getElementById('overlayInner');
+    inner.style.fontWeight = ctrlBold.classList.contains('active') ? 'bold' : 'normal';
+  });
+
+  // Bg opacity
+  const ctrlBgOpacity    = document.getElementById('ctrlBgOpacity');
+  const ctrlBgOpacityVal = document.getElementById('ctrlBgOpacityVal');
+  ctrlBgOpacity.addEventListener('input', () => {
+    ctrlBgOpacityVal.textContent = ctrlBgOpacity.value + '%';
+    applyOverlayBg();
+  });
+
+  // Bg color
+  const ctrlBgColor    = document.getElementById('ctrlBgColor');
+  const ctrlBgColorVal = document.getElementById('ctrlBgColorVal');
+  ctrlBgColor.addEventListener('input', () => {
+    ctrlBgColorVal.textContent = ctrlBgColor.value;
+    applyOverlayBg();
+  });
+}
+
+function applyOverlayBg() {
+  const opacity = parseInt(document.getElementById('ctrlBgOpacity').value) / 100;
+  const color   = document.getElementById('ctrlBgColor').value;
+  const r = parseInt(color.slice(1,3), 16);
+  const g = parseInt(color.slice(3,5), 16);
+  const b = parseInt(color.slice(5,7), 16);
+  document.getElementById('overlayInner').style.backgroundColor = `rgba(${r},${g},${b},${opacity})`;
 }
 
 function escapeHtml(str) {
@@ -478,14 +646,11 @@ function escapeHtml(str) {
 }
 
 // ── COPY ─────────────────────────────────────────────────────────────
-function copyBlock(btn) {
-  const content = btn.closest('.result-block').querySelector('.result-block-content').innerText;
+function copyPromptBlock(btn) {
+  const content = btn.closest('.prompt-block').querySelector('.prompt-block-content').innerText;
   navigator.clipboard.writeText(content).then(() => {
     btn.textContent = '✓ Copiado!';
     btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = 'Copiar';
-      btn.classList.remove('copied');
-    }, 2000);
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
   });
 }
