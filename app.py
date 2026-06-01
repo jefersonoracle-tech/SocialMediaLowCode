@@ -29,6 +29,36 @@ MODO DE OPERAÇÃO — INTERFACE WEB:
 - Execute diretamente as FASES 3 → 4 → 5 e entregue o resultado final completo.
 - O tema já foi escolhido pelo usuário — pule a FASE 2 (pesquisa) e vá direto para FASE 3.
 
+FORMATO DE SAÍDA OBRIGATÓRIO — use EXATAMENTE esta estrutura:
+
+Para cada slide/post use:
+
+========================================
+SLIDE - [NOME EM MAIÚSCULAS]
+========================================
+
+[PROMPT_IMAGEM]
+Crie uma imagem vertical para Instagram.
+[Descreva APENAS a cena visual: ambiente, pessoas, objetos, iluminação, atmosfera, cores.]
+[NÃO inclua instruções de texto, layout, marca d'água ou posicionamento de copy.]
+[/PROMPT_IMAGEM]
+
+[TEXTO_OVERLAY]
+TÍTULO: [texto principal — máx 10 palavras]
+SUBTÍTULO: [texto de apoio — máx 15 palavras, ou deixe vazio]
+BADGE: [etiqueta curta — 1-2 palavras, ou deixe vazio]
+[/TEXTO_OVERLAY]
+
+Após todos os slides:
+
+[LEGENDA]
+[legenda completa pronta para copiar no Instagram]
+[/LEGENDA]
+
+[TRILHA_SONORA]
+[sugestões musicais com justificativa]
+[/TRILHA_SONORA]
+
 ---
 """
     return header + after_fase1

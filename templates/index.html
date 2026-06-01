@@ -275,11 +275,113 @@
           <button class="btn-secondary" id="btnNovo">← Novo briefing</button>
         </div>
 
-        <div id="resultado-content">
-          <div class="empty-state">
+        <!-- Empty / streaming state -->
+        <div id="resultado-stream">
+          <div class="empty-state" id="emptyState">
             <span>✨</span>
             <p>Nenhum conteúdo gerado ainda.<br>Preencha o briefing e clique em Gerar.</p>
           </div>
+        </div>
+
+        <!-- Result layout (shown after generation) -->
+        <div class="result-layout hidden" id="resultLayout">
+
+          <!-- Slide tabs -->
+          <div class="slide-tabs hidden" id="slideTabs"></div>
+
+          <!-- Preview + Controls -->
+          <div class="preview-row">
+
+            <!-- Post container -->
+            <div class="preview-col">
+              <div class="post-container" id="postContainer">
+                <!-- Layer 1: imagem (fundo) -->
+                <div class="layer-image" id="layerImage">
+                  <div class="image-drop-zone" id="imageDrop">
+                    <span class="drop-icon">📷</span>
+                    <span>Adicione a imagem gerada no Gemini</span>
+                    <span class="drop-sub">clique ou arraste aqui</span>
+                  </div>
+                  <img id="bgImg" alt="background" />
+                  <input type="file" id="bgImageInput" accept="image/*" hidden />
+                </div>
+                <!-- Layer 2: texto (overlay) -->
+                <div class="layer-text" id="layerText">
+                  <div class="overlay-inner" id="overlayInner">
+                    <div class="overlay-badge" id="overlayBadge" contenteditable="true" data-placeholder="Badge"></div>
+                    <div class="overlay-titulo" id="overlayTitulo" contenteditable="true" data-placeholder="Título"></div>
+                    <div class="overlay-subtitulo" id="overlaySubtitulo" contenteditable="true" data-placeholder="Subtítulo"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls-col">
+              <div class="controls-panel">
+                <div class="controls-title">Editar texto</div>
+
+                <div class="control-group">
+                  <label>Tamanho</label>
+                  <div class="control-row">
+                    <input type="range" id="ctrlFontSize" min="10" max="60" value="24" />
+                    <span class="ctrl-val" id="ctrlFontSizeVal">24px</span>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label>Cor do texto</label>
+                  <div class="control-row">
+                    <input type="color" id="ctrlColor" value="#ffffff" />
+                    <span class="ctrl-val" id="ctrlColorVal">#ffffff</span>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label>Alinhamento</label>
+                  <div class="btn-group">
+                    <button class="ctrl-btn" data-align="left" title="Esquerda">&#8676;</button>
+                    <button class="ctrl-btn active" data-align="center" title="Centro">&#8677;</button>
+                    <button class="ctrl-btn" data-align="right" title="Direita">&#8677;</button>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label>Posição vertical</label>
+                  <div class="btn-group">
+                    <button class="ctrl-btn" data-valign="flex-start" title="Topo">↑</button>
+                    <button class="ctrl-btn active" data-valign="center" title="Centro">↕</button>
+                    <button class="ctrl-btn" data-valign="flex-end" title="Base">↓</button>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label>Negrito</label>
+                  <button class="ctrl-btn" id="ctrlBold" title="Negrito"><b>B</b></button>
+                </div>
+
+                <div class="control-group">
+                  <label>Fundo do texto</label>
+                  <div class="control-row">
+                    <input type="range" id="ctrlBgOpacity" min="0" max="85" value="0" />
+                    <span class="ctrl-val" id="ctrlBgOpacityVal">0%</span>
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label>Cor do fundo</label>
+                  <div class="control-row">
+                    <input type="color" id="ctrlBgColor" value="#000000" />
+                    <span class="ctrl-val" id="ctrlBgColorVal">#000000</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prompts -->
+          <div id="promptsPanel"></div>
+
         </div>
       </section>
 
