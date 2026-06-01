@@ -319,6 +319,35 @@ textarea { resize: vertical; min-height: 80px; }
   justify-content: center;
 }
 
+/* ── CARD LOCKED ── */
+.card-locked {
+  opacity: 0.45;
+  pointer-events: none;
+  position: relative;
+  transition: opacity 0.3s ease;
+}
+
+.card-locked .card-title .lock-icon {
+  margin-left: auto;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.card:not(.card-locked) .lock-icon { display: none; }
+
+.card-unlocked {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.card-unlocked .lock-icon { display: none !important; }
+
+.btn-generate:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
 /* ── BUSCAR TEMA ── */
 .btn-buscar {
   width: 100%;

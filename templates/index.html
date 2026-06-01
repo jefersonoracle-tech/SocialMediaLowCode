@@ -40,31 +40,10 @@
 
         <form id="briefingForm">
 
-          <!-- REFERÊNCIA VISUAL -->
-          <div class="card">
+          <!-- 1. PERFIL & TEMA -->
+          <div class="card" id="card-tema">
             <div class="card-title">
               <span class="step-badge">1</span>
-              Referência Visual
-              <span class="optional">opcional</span>
-            </div>
-            <div class="upload-area" id="uploadArea">
-              <input type="file" id="fileInput" accept="image/*" hidden />
-              <div class="upload-placeholder" id="uploadPlaceholder">
-                <span class="upload-icon">🖼️</span>
-                <span>Arraste um print do perfil aqui</span>
-                <span class="upload-sub">ou <button type="button" class="link-btn" id="uploadBtn">clique para selecionar</button></span>
-              </div>
-              <div class="upload-preview hidden" id="uploadPreview">
-                <img id="previewImg" src="" alt="preview" />
-                <button type="button" class="remove-btn" id="removeImg">✕</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- PERFIL -->
-          <div class="card">
-            <div class="card-title">
-              <span class="step-badge">2</span>
               Perfil &amp; Tema
             </div>
 
@@ -121,16 +100,41 @@
               <div id="temasList" class="temas-list"></div>
             </div>
 
-            <!-- Tema selecionado (hidden field) -->
+            <!-- Tema selecionado (hidden) -->
             <input type="hidden" id="temaSelecionado" />
           </div>
 
-          <!-- PERFIL DO INSTAGRAM -->
-          <div class="card">
+          <!-- 2. REFERÊNCIA VISUAL -->
+          <div class="card card-locked" id="card-referencia">
+            <div class="card-title">
+              <span class="step-badge">2</span>
+              Referência Visual
+              <span class="optional">opcional</span>
+              <span class="lock-icon">🔒</span>
+            </div>
+            <div class="card-lock-overlay"></div>
+            <div class="upload-area" id="uploadArea">
+              <input type="file" id="fileInput" accept="image/*" hidden />
+              <div class="upload-placeholder" id="uploadPlaceholder">
+                <span class="upload-icon">🖼️</span>
+                <span>Arraste um print do perfil aqui</span>
+                <span class="upload-sub">ou <button type="button" class="link-btn" id="uploadBtn">clique para selecionar</button></span>
+              </div>
+              <div class="upload-preview hidden" id="uploadPreview">
+                <img id="previewImg" src="" alt="preview" />
+                <button type="button" class="remove-btn" id="removeImg">✕</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. PERFIL DO INSTAGRAM -->
+          <div class="card card-locked" id="card-perfil">
             <div class="card-title">
               <span class="step-badge">3</span>
               Perfil do Instagram
+              <span class="lock-icon">🔒</span>
             </div>
+            <div class="card-lock-overlay"></div>
             <div class="field-row">
               <div class="field">
                 <label>@ do Instagram <span class="req">*</span></label>
@@ -168,12 +172,14 @@
             </div>
           </div>
 
-          <!-- FORMATO -->
-          <div class="card">
+          <!-- 4. FORMATO -->
+          <div class="card card-locked" id="card-formato">
             <div class="card-title">
               <span class="step-badge">4</span>
               Formato
+              <span class="lock-icon">🔒</span>
             </div>
+            <div class="card-lock-overlay"></div>
             <div class="format-grid">
               <label class="format-card">
                 <input type="radio" name="formato" value="Feed" />
@@ -206,12 +212,14 @@
             </div>
           </div>
 
-          <!-- PALETA TONAL -->
-          <div class="card">
+          <!-- 5. PALETA TONAL -->
+          <div class="card card-locked" id="card-paleta">
             <div class="card-title">
               <span class="step-badge">5</span>
               Paleta Tonal
+              <span class="lock-icon">🔒</span>
             </div>
+            <div class="card-lock-overlay"></div>
             <div class="paleta-grid">
               <label class="paleta-card dark">
                 <input type="radio" name="paleta" value="Dark/Cinematográfico" checked />
@@ -240,18 +248,20 @@
             </div>
           </div>
 
-          <!-- OBSERVAÇÕES -->
-          <div class="card">
+          <!-- 6. OBSERVAÇÕES -->
+          <div class="card card-locked" id="card-obs">
             <div class="card-title">
               <span class="step-badge">6</span>
               Observações adicionais
               <span class="optional">opcional</span>
+              <span class="lock-icon">🔒</span>
             </div>
+            <div class="card-lock-overlay"></div>
             <textarea id="observacoes" rows="3"
               placeholder="Identidade visual existente, cores da marca, referência de perfil (@handle), algo específico que quer destacar…"></textarea>
           </div>
 
-          <button type="submit" class="btn-generate" id="btnGenerate">
+          <button type="submit" class="btn-generate" id="btnGenerate" disabled>
             <span id="btnText">✦ Gerar Conteúdo</span>
             <span id="btnLoading" class="hidden">⏳ Gerando…</span>
           </button>

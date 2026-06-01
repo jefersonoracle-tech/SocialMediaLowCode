@@ -162,7 +162,7 @@ function renderTemas(temas) {
     card.addEventListener('click', () => {
       document.querySelectorAll('.tema-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
-      document.getElementById('temaSelecionado').value = `${tema.titulo} — ${tema.angulo}`;
+      setTemaSelecionado(`${tema.titulo} — ${tema.angulo}`);
     });
 
     list.appendChild(card);
@@ -173,9 +173,24 @@ function renderTemas(temas) {
   // Auto-seleciona o recomendado
   if (autoSelectCard) {
     autoSelectCard.classList.add('selected');
-    document.getElementById('temaSelecionado').value = `${autoSelectTema.titulo} — ${autoSelectTema.angulo}`;
+    setTemaSelecionado(`${autoSelectTema.titulo} — ${autoSelectTema.angulo}`);
     autoSelectCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
+}
+
+function setTemaSelecionado(valor) {
+  document.getElementById('temaSelecionado').value = valor;
+  const hasTheme = valor.trim().length > 0;
+  const lockedCards = ['card-referencia', 'card-perfil', 'card-formato', 'card-paleta', 'card-obs'];
+  lockedCards.forEach(id => {
+    const card = document.getElementById(id);
+    if (hasTheme) {
+      card.classList.add('card-unlocked');
+    } else {
+      card.classList.remove('card-unlocked');
+    }
+  });
+  document.getElementById('btnGenerate').disabled = !hasTheme;
 }
 
 // ── FORMATO ──────────────────────────────────────────────────────────
