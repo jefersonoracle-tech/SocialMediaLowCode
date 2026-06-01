@@ -10,7 +10,17 @@ load_dotenv()
 app = Flask(__name__)
 
 SKILL_PATH = Path(__file__).parent / "skill" / "SKILL.md"
-SKILL_PROMPT = SKILL_PATH.read_text(encoding="utf-8")
+_OVERRIDE = """MODO DE OPERAÇÃO — INTERFACE WEB (PRIORIDADE MÁXIMA):
+Você está sendo chamado por uma interface web que já coletou todos os dados do briefing.
+REGRAS ABSOLUTAS que sobrepõem qualquer instrução das fases abaixo:
+1. NUNCA faça perguntas ao usuário — nenhuma, de nenhum tipo.
+2. NUNCA peça arquivo de referência (PASSO 0 está desativado).
+3. NUNCA peça confirmação de tema, paleta, formato ou qualquer outro dado.
+4. Execute SEMPRE as FASES 2, 3, 4 e 5 diretamente com os dados recebidos.
+5. Se algum dado estiver faltando, assuma um valor razoável e prossiga sem comentar.
+---
+"""
+SKILL_PROMPT = _OVERRIDE + SKILL_PATH.read_text(encoding="utf-8")
 
 
 def get_client():
