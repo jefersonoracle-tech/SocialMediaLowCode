@@ -83,7 +83,7 @@ Sugira entre 5 e 6 temas ordenados do maior para o menor potencial."""
     try:
         client = get_client()
         response = client.messages.create(
-            model="claude-sonnet-4-5-20251001",
+            model="claude-sonnet-4-5",
             max_tokens=2048,
             tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 5}],
             messages=[{"role": "user", "content": prompt}],
