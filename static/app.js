@@ -101,23 +101,27 @@ function buildBriefing() {
   const obs       = v('observacoes');
   const numSlides = v('numSlides');
 
-  let msg = `Quero criar um ${formato} para o Instagram.\n\n`;
-  msg += `@ do Instagram: @${handle}\n`;
-  msg += `Nicho/Tema: ${nicho}\n`;
-  msg += `Público-alvo: ${publico}\n`;
-  if (objetivo)  msg += `Objetivo: ${objetivo}\n`;
-  if (tom)       msg += `Tom de voz: ${tom}\n`;
-  if (linha)     msg += `Linha editorial: ${linha}\n`;
-  if (tema)      msg += `Tema do post: ${tema}\n`;
-  msg += `Paleta tonal: ${paleta}\n`;
-  msg += `Formato: ${formato}`;
+  let msg = `O usuário já forneceu todos os dados do briefing via interface. PULE COMPLETAMENTE a FASE 1 (não faça nenhuma pergunta). Use os dados abaixo e execute diretamente as FASES 2, 3, 4 e 5.\n\n`;
+  msg += `BRIEFING COMPLETO:\n`;
+  msg += `- @ do Instagram: @${handle}\n`;
+  msg += `- Nicho/Tema: ${nicho}\n`;
+  msg += `- Público-alvo: ${publico}\n`;
+  if (objetivo)  msg += `- Objetivo: ${objetivo}\n`;
+  if (tom)       msg += `- Tom de voz: ${tom}\n`;
+  if (linha)     msg += `- Linha editorial: ${linha}\n`;
+  if (tema)      msg += `- Tema do post: ${tema}\n`;
+  else           msg += `- Tema do post: (escolher o melhor tema com base na pesquisa de tendências)\n`;
+  msg += `- Paleta tonal: ${paleta}\n`;
+  msg += `- Formato: ${formato}`;
   if (formato === 'Carrossel' && numSlides) msg += ` com ${numSlides} slides`;
   msg += '\n';
-  if (obs) msg += `\nObservações: ${obs}\n`;
+  if (obs) msg += `- Observações: ${obs}\n`;
 
   if (uploadedImage) {
-    msg += '\n(Arquivo de referência visual enviado em anexo — analise-o para extrair o DNA editorial do perfil.)';
+    msg += `\nArquivo de referência visual enviado em anexo. Use-o para extrair o DNA editorial do perfil (FASE 1.5) e pule direto para FASE 2.\n`;
   }
+
+  msg += `\nAgora execute as FASES 2, 3, 4 e 5 silenciosamente e entregue o resultado final completo.`;
 
   return msg;
 }
