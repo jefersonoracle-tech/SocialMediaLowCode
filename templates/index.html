@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram Social Media</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">✦</span>
+        <span class="logo-text">Social<br>Media AI</span>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn active" data-section="briefing">
+          <span class="nav-icon">📋</span> Briefing
+        </button>
+        <button class="nav-btn" data-section="resultado">
+          <span class="nav-icon">✨</span> Resultado
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <span>claude-opus-4-8</span>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- SECTION: BRIEFING -->
+      <section id="section-briefing" class="section active">
+        <div class="section-header">
+          <h1>Novo Conteúdo</h1>
+          <p>Preencha o briefing e a IA cria o conteúdo completo para você.</p>
+        </div>
+
+        <form id="briefingForm">
+
+          <!-- REFERÊNCIA VISUAL -->
+          <div class="card">
+            <div class="card-title">
+              <span class="step-badge">1</span>
+              Referência Visual
+              <span class="optional">opcional</span>
+            </div>
+            <div class="upload-area" id="uploadArea">
+              <input type="file" id="fileInput" accept="image/*" hidden />
+              <div class="upload-placeholder" id="uploadPlaceholder">
+                <span class="upload-icon">🖼️</span>
+                <span>Arraste um print do perfil aqui</span>
+                <span class="upload-sub">ou <button type="button" class="link-btn" id="uploadBtn">clique para selecionar</button></span>
+              </div>
+              <div class="upload-preview hidden" id="uploadPreview">
+                <img id="previewImg" src="" alt="preview" />
+                <button type="button" class="remove-btn" id="removeImg">✕</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PERFIL -->
+          <div class="card">
+            <div class="card-title">
+              <span class="step-badge">2</span>
+              Perfil
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>@ do Instagram <span class="req">*</span></label>
+                <div class="input-prefix">
+                  <span>@</span>
+                  <input type="text" id="handle" placeholder="suapagina" required />
+                </div>
+              </div>
+              <div class="field">
+                <label>Nicho / Tema <span class="req">*</span></label>
+                <input type="text" id="nicho" placeholder="ex: marketing digital, nutrição, F1…" required />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Público-alvo <span class="req">*</span></label>
+                <input type="text" id="publico" placeholder="ex: empreendedores iniciantes" required />
+              </div>
+              <div class="field">
+                <label>Objetivo</label>
+                <select id="objetivo">
+                  <option value="">Selecione…</option>
+                  <option>Gerar autoridade</option>
+                  <option>Atrair leads</option>
+                  <option>Educar</option>
+                  <option>Vender</option>
+                  <option>Engajar</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOM E LINHA EDITORIAL -->
+          <div class="card">
+            <div class="card-title">
+              <span class="step-badge">3</span>
+              Tom &amp; Linha Editorial
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Tom de voz</label>
+                <select id="tom">
+                  <option value="">Selecione…</option>
+                  <option>Profissional e educativo</option>
+                  <option>Provocador e direto</option>
+                  <option>Inspiracional</option>
+                  <option>Casual e bem-humorado</option>
+                  <option>Técnico e analítico</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Linha editorial</label>
+                <select id="linha">
+                  <option value="">Selecione…</option>
+                  <option>Educativo</option>
+                  <option>Motivacional</option>
+                  <option>Curiosidades</option>
+                  <option>Institucional</option>
+                  <option>Ação (CTA)</option>
+                  <option>Making of</option>
+                  <option>Collabs</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Tema específico do post <span class="optional">(deixe em branco para a IA escolher)</span></label>
+              <input type="text" id="tema" placeholder="ex: 3 erros que todo iniciante comete em investimentos" />
+            </div>
+          </div>
+
+          <!-- FORMATO -->
+          <div class="card">
+            <div class="card-title">
+              <span class="step-badge">4</span>
+              Formato
+            </div>
+            <div class="format-grid">
+              <label class="format-card">
+                <input type="radio" name="formato" value="Feed" />
+                <span class="format-icon">🖼️</span>
+                <span class="format-name">Feed</span>
+                <span class="format-desc">1 imagem</span>
+              </label>
+              <label class="format-card">
+                <input type="radio" name="formato" value="Carrossel" checked />
+                <span class="format-icon">📱</span>
+                <span class="format-name">Carrossel</span>
+                <span class="format-desc">múltiplos slides</span>
+              </label>
+              <label class="format-card">
+                <input type="radio" name="formato" value="Story" />
+                <span class="format-icon">⏱️</span>
+                <span class="format-name">Story</span>
+                <span class="format-desc">9:16 efêmero</span>
+              </label>
+              <label class="format-card">
+                <input type="radio" name="formato" value="Reels" />
+                <span class="format-icon">🎬</span>
+                <span class="format-name">Reels</span>
+                <span class="format-desc">roteiro + capa</span>
+              </label>
+            </div>
+            <div class="field slides-field hidden" id="slidesField">
+              <label>Número de slides</label>
+              <input type="number" id="numSlides" min="2" max="10" value="4" />
+            </div>
+          </div>
+
+          <!-- PALETA TONAL -->
+          <div class="card">
+            <div class="card-title">
+              <span class="step-badge">5</span>
+              Paleta Tonal
+            </div>
+            <div class="paleta-grid">
+              <label class="paleta-card dark">
+                <input type="radio" name="paleta" value="Dark/Cinematográfico" checked />
+                <span class="paleta-preview dark-preview"></span>
+                <span class="paleta-name">🌑 Dark</span>
+                <span class="paleta-desc">Cinematográfico</span>
+              </label>
+              <label class="paleta-card bright">
+                <input type="radio" name="paleta" value="Bright/Editorial" />
+                <span class="paleta-preview bright-preview"></span>
+                <span class="paleta-name">☀️ Bright</span>
+                <span class="paleta-desc">Editorial</span>
+              </label>
+              <label class="paleta-card golden">
+                <input type="radio" name="paleta" value="Golden Hour/Quente" />
+                <span class="paleta-preview golden-preview"></span>
+                <span class="paleta-name">🌅 Golden</span>
+                <span class="paleta-desc">Quente</span>
+              </label>
+              <label class="paleta-card vibrant">
+                <input type="radio" name="paleta" value="Vibrante/Colorido" />
+                <span class="paleta-preview vibrant-preview"></span>
+                <span class="paleta-name">🎨 Vibrante</span>
+                <span class="paleta-desc">Colorido</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- OBSERVAÇÕES -->
+          <div class="card">
+            <div class="card-title">
+              <span class="step-badge">6</span>
+              Observações adicionais
+              <span class="optional">opcional</span>
+            </div>
+            <textarea id="observacoes" rows="3"
+              placeholder="Identidade visual existente, cores da marca, referência de perfil (@handle), algo específico que quer destacar…"></textarea>
+          </div>
+
+          <button type="submit" class="btn-generate" id="btnGenerate">
+            <span id="btnText">✦ Gerar Conteúdo</span>
+            <span id="btnLoading" class="hidden">⏳ Gerando…</span>
+          </button>
+
+        </form>
+      </section>
+
+      <!-- SECTION: RESULTADO -->
+      <section id="section-resultado" class="section">
+        <div class="section-header">
+          <h1>Resultado</h1>
+          <button class="btn-secondary" id="btnNovo">← Novo briefing</button>
+        </div>
+
+        <div id="resultado-content">
+          <div class="empty-state">
+            <span>✨</span>
+            <p>Nenhum conteúdo gerado ainda.<br>Preencha o briefing e clique em Gerar.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
