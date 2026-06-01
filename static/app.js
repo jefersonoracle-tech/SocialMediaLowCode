@@ -101,7 +101,7 @@ function buildBriefing() {
   const obs       = v('observacoes');
   const numSlides = v('numSlides');
 
-  let msg = `O usuário já forneceu todos os dados do briefing via interface. PULE COMPLETAMENTE a FASE 1 (não faça nenhuma pergunta). Use os dados abaixo e execute diretamente as FASES 2, 3, 4 e 5.\n\n`;
+  let msg = `INSTRUÇÃO CRÍTICA: O briefing já está 100% completo. NÃO faça nenhuma pergunta. NÃO peça arquivo de referência. NÃO peça confirmações. NÃO execute a FASE 1 nem o PASSO 0. Vá direto para FASE 2, depois 3, 4 e 5, entregando o resultado final sem interrupções.\n\n`;
   msg += `BRIEFING COMPLETO:\n`;
   msg += `- @ do Instagram: @${handle}\n`;
   msg += `- Nicho/Tema: ${nicho}\n`;
