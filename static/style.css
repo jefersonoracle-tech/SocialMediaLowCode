@@ -922,6 +922,7 @@ textarea { resize: vertical; min-height: 80px; }
   align-items: center;
   justify-content: center;
   padding: 20px;
+  pointer-events: none;
 }
 
 .overlay-inner {
@@ -958,12 +959,11 @@ textarea { resize: vertical; min-height: 80px; }
 .overlay-titulo {
   font-size: 24px;
   font-weight: 700;
-  color: #fff;
   line-height: 1.2;
-  text-align: center;
   outline: none;
   text-shadow: 0 2px 8px rgba(0,0,0,0.6);
   min-height: 8px;
+  pointer-events: auto;
 }
 
 .overlay-titulo:empty:before {
@@ -974,16 +974,19 @@ textarea { resize: vertical; min-height: 80px; }
 
 .overlay-subtitulo {
   font-size: 14px;
-  color: rgba(255,255,255,0.85);
-  text-align: center;
   outline: none;
   text-shadow: 0 1px 4px rgba(0,0,0,0.5);
   min-height: 4px;
+  pointer-events: auto;
 }
 
 .overlay-subtitulo:empty:before {
   content: attr(data-placeholder);
   opacity: 0.3;
+}
+
+.overlay-badge {
+  pointer-events: auto;
 }
 
 [contenteditable]:focus {

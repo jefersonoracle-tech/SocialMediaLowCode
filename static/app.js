@@ -495,12 +495,15 @@ function loadSlide(idx) {
   const slide = parsedSlides[idx];
   if (!slide) return;
 
-  document.getElementById('overlayBadge').textContent    = slide.badge    || '';
-  document.getElementById('overlayTitulo').textContent   = slide.titulo   || '';
+  document.getElementById('overlayBadge').textContent     = slide.badge     || '';
+  document.getElementById('overlayTitulo').textContent    = slide.titulo    || '';
   document.getElementById('overlaySubtitulo').textContent = slide.subtitulo || '';
 
-  // Reset bg image for new slide (keep if same session image)
-  // (user manages image per-slide manually)
+  // Aplica cor e tamanho atuais dos controles
+  const color = document.getElementById('ctrlColor').value || '#ffffff';
+  const fontSize = document.getElementById('ctrlFontSize').value + 'px';
+  applyToOverlays(OVERLAY_TEXT_IDS, 'color', color);
+  applyToOverlays(OVERLAY_TEXT_IDS, 'fontSize', fontSize);
 }
 
 function renderPromptsPanel(parsed) {
@@ -567,6 +570,13 @@ function loadBgImage(file) {
 }
 
 // ── CONTROLS ──────────────────────────────────────────────────────────
+const OVERLAY_TEXT_IDS = ['overlayTitulo', 'overlaySubtitulo'];
+const OVERLAY_ALL_IDS  = ['overlayBadge', 'overlayTitulo', 'overlaySubtitulo'];
+
+function applyToOverlays(ids, prop, value) {
+  ids.forEach(id => { document.getElementById(id).style[prop] = value; });
+}
+
 function wireControls() {
   // Font size
   const ctrlFontSize    = document.getElementById('ctrlFontSize');
@@ -574,7 +584,7 @@ function wireControls() {
   ctrlFontSize.addEventListener('input', () => {
     const px = ctrlFontSize.value + 'px';
     ctrlFontSizeVal.textContent = px;
-    document.getElementById('overlayInner').style.fontSize = px;
+    applyToOverlays(OVERLAY_TEXT_IDS, 'fontSize', px);
   });
 
   // Text color
@@ -582,7 +592,7 @@ function wireControls() {
   const ctrlColorVal = document.getElementById('ctrlColorVal');
   ctrlColor.addEventListener('input', () => {
     ctrlColorVal.textContent = ctrlColor.value;
-    document.getElementById('overlayInner').style.color = ctrlColor.value;
+    applyToOverlays(OVERLAY_TEXT_IDS, 'color', ctrlColor.value);
   });
 
   // Alignment
@@ -590,7 +600,7 @@ function wireControls() {
     btn.addEventListener('click', () => {
       document.querySelectorAll('[data-align]').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('overlayInner').style.textAlign = btn.dataset.align;
+      applyToOverlays(OVERLAY_ALL_IDS, 'textAlign', btn.dataset.align);
     });
   });
 
@@ -607,8 +617,8 @@ function wireControls() {
   const ctrlBold = document.getElementById('ctrlBold');
   ctrlBold.addEventListener('click', () => {
     ctrlBold.classList.toggle('active');
-    const inner = document.getElementById('overlayInner');
-    inner.style.fontWeight = ctrlBold.classList.contains('active') ? 'bold' : 'normal';
+    const fw = ctrlBold.classList.contains('active') ? 'bold' : 'normal';
+    applyToOverlays(OVERLAY_TEXT_IDS, 'fontWeight', fw);
   });
 
   // Bg opacity
