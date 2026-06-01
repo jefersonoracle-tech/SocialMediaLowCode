@@ -563,6 +563,63 @@ textarea { resize: vertical; min-height: 80px; }
 .slides-field { margin-top: 0; }
 .slides-field input { max-width: 100px; }
 
+/* ── DICA REFINAMENTO ── */
+.dica-refinamento {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(124, 92, 252, 0.06);
+  border: 1px solid rgba(124, 92, 252, 0.25);
+  border-radius: var(--radius);
+}
+
+.dica-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.dica-icon { font-size: 16px; }
+
+.dica-titulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent2);
+}
+
+.dica-texto {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.dica-texto strong { color: var(--text); }
+.dica-texto em { color: var(--accent2); font-style: normal; }
+
+.dica-exemplos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dica-chip {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text2);
+  font-size: 12px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dica-chip:hover {
+  border-color: var(--accent2);
+  color: var(--accent2);
+  background: var(--accent-glow);
+}
+
 /* ── PALETA GRID ── */
 .paleta-grid {
   display: grid;

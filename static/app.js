@@ -176,6 +176,64 @@ function renderTemas(temas) {
     setTemaSelecionado(`${autoSelectTema.titulo} — ${autoSelectTema.angulo}`);
     autoSelectCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
+
+  // Dica de refinamento
+  const nichoVal  = document.getElementById('nicho').value.trim();
+  const objVal    = document.getElementById('objetivo').value.trim();
+  const dicaEl    = document.getElementById('dicaRefinamento');
+  if (dicaEl) dicaEl.remove();
+  list.insertAdjacentHTML('afterend', buildDicaRefinamento(nichoVal, objVal));
+}
+
+function buildDicaRefinamento(nicho, objetivo) {
+  const exemplos = gerarExemplosRefinamento(nicho, objetivo);
+  return `
+    <div class="dica-refinamento" id="dicaRefinamento">
+      <div class="dica-header">
+        <span class="dica-icon">💡</span>
+        <span class="dica-titulo">Quer refinar a pesquisa?</span>
+      </div>
+      <p class="dica-texto">Seja mais específico no campo <strong>Nicho / Tema</strong> para encontrar temas mais cirúrgicos. Exemplos para <em>${escapeHtml(nicho)}</em>:</p>
+      <div class="dica-exemplos">
+        ${exemplos.map(ex => `<button type="button" class="dica-chip" onclick="aplicarRefinamento('${escapeHtml(ex)}')">${escapeHtml(ex)}</button>`).join('')}
+      </div>
+    </div>`;
+}
+
+function gerarExemplosRefinamento(nicho, objetivo) {
+  const n = nicho.toLowerCase();
+  const exemplos = {
+    futebol:           ['futebol tático', 'futebol feminino', 'futebol base / categorias de acesso', 'arbitragem no futebol', 'preparação física no futebol'],
+    marketing:         ['marketing de conteúdo', 'tráfego pago para iniciantes', 'copywriting para Instagram', 'funil de vendas orgânico'],
+    nutrição:          ['nutrição esportiva', 'nutrição infantil', 'alimentação plant-based', 'nutrição para emagrecimento'],
+    fitness:           ['treino para iniciantes', 'hipertrofia muscular', 'treino feminino', 'crossfit para iniciantes'],
+    finanças:          ['finanças pessoais', 'investimentos para iniciantes', 'renda extra', 'controle de gastos'],
+    tecnologia:        ['inteligência artificial', 'programação para iniciantes', 'segurança digital', 'automação de tarefas'],
+    empreendedorismo:  ['empreendedorismo digital', 'gestão de pequenas empresas', 'vendas online', 'produtividade para empreendedores'],
+  };
+
+  for (const [key, sugestoes] of Object.entries(exemplos)) {
+    if (n.includes(key)) return sugestoes;
+  }
+
+  // Genérico quando não há match
+  return [
+    `${nicho} para iniciantes`,
+    `${nicho} avançado`,
+    `tendências de ${nicho} em 2025`,
+    `erros comuns em ${nicho}`,
+    `${nicho} na prática`,
+  ];
+}
+
+function aplicarRefinamento(texto) {
+  document.getElementById('nicho').value = texto;
+  // Limpa temas anteriores e dica
+  document.getElementById('temasList').innerHTML = '';
+  const dica = document.getElementById('dicaRefinamento');
+  if (dica) dica.remove();
+  document.getElementById('temasContainer').classList.add('hidden');
+  setTemaSelecionado('');
 }
 
 function setTemaSelecionado(valor) {
