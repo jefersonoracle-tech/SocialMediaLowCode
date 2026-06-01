@@ -10,17 +10,35 @@ load_dotenv()
 app = Flask(__name__)
 
 SKILL_PATH = Path(__file__).parent / "skill" / "SKILL.md"
-_OVERRIDE = """MODO DE OPERAÇÃO — INTERFACE WEB (PRIORIDADE MÁXIMA):
-Você está sendo chamado por uma interface web que já coletou todos os dados do briefing.
-REGRAS ABSOLUTAS que sobrepõem qualquer instrução das fases abaixo:
-1. NUNCA faça perguntas ao usuário — nenhuma, de nenhum tipo.
-2. NUNCA peça arquivo de referência (PASSO 0 está desativado).
-3. NUNCA peça confirmação de tema, paleta, formato ou qualquer outro dado.
-4. Execute SEMPRE as FASES 2, 3, 4 e 5 diretamente com os dados recebidos.
-5. Se algum dado estiver faltando, assuma um valor razoável e prossiga sem comentar.
+
+def _build_system_prompt() -> str:
+    full = SKILL_PATH.read_text(encoding="utf-8")
+    # Remove FASE 1 entirely — the web form already handles data collection.
+    # Keep everything from FASE 2 onwards.
+    marker = "## FASE 2"
+    idx = full.find(marker)
+    after_fase1 = full[idx:] if idx != -1 else full
+
+    header = """Você é um Gestor de Mídias Sociais sênior e Estrategista de Marketing Digital.
+Seu trabalho é conduzir o ciclo completo de criação de conteúdo para Instagram. Tudo em PT-BR.
+
+MODO DE OPERAÇÃO — INTERFACE WEB:
+- O briefing já foi coletado por um formulário. Todos os dados estão na mensagem do usuário.
+- NÃO faça nenhuma pergunta. NÃO peça arquivo de referência. NÃO peça confirmações.
+- Se algum dado estiver faltando, assuma um valor razoável e prossiga sem mencionar.
+- Execute diretamente as FASES 2 → 3 → 4 → 5 e entregue o resultado final completo.
+
+Fluxo de execução (silencioso — o usuário só vê o resultado final):
+  FASE 2: Pesquisa de tendências (web_search)
+  FASE 3: Seleção do melhor tema (automático, sem mostrar opções)
+  FASE 4: Direção criativa (paleta, tipografia, estilo visual)
+  FASE 5: Produção (prompts Gemini + legenda + sugestão musical)
+
 ---
 """
-SKILL_PROMPT = _OVERRIDE + SKILL_PATH.read_text(encoding="utf-8")
+    return header + after_fase1
+
+SKILL_PROMPT = _build_system_prompt()
 
 
 def get_client():
