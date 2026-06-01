@@ -102,7 +102,7 @@ function buildBriefing() {
   const numSlides = v('numSlides');
 
   let msg = `BRIEFING COMPLETO (pule a FASE 1 e execute direto as FASES 2→5):\n`;
-  msg += `- @ do Instagram: @${handle}\n`;
+  msg += `- @ do Instagram: @${handle.replace(/^@/, '')}\n`;
   msg += `- Nicho/Tema: ${nicho}\n`;
   msg += `- Público-alvo: ${publico}\n`;
   if (objetivo)  msg += `- Objetivo: ${objetivo}\n`;
