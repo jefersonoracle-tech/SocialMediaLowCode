@@ -847,17 +847,16 @@ Minimalista + muito contraste → "Fundo PRETO ABSOLUTO com único elemento BRIL
 
 ## FASE 5 — Produção Manual via Gemini
 
-A produção gera um **prompt completo e detalhado** que o usuário cola manualmente no Google Gemini. O prompt inclui descrição visual completa + texto sobreposto.
+A produção gera um **prompt completo e detalhado** que o usuário cola manualmente no Google Gemini. O prompt inclui descrição visual completa da cena — **sem nenhum texto na imagem** (título, subtítulo, badge, copy). O texto é adicionado digitalmente no preview de edição da aplicação.
 
 **Workflow geral (todos os formatos):**
 
 ```
-1. Escrever o copy (texto de cada slide/tela)
+1. Escrever o copy (texto de cada slide/tela) — entregue separadamente no [TEXTO_OVERLAY]
 2. Construir prompt COMPLETO com:
    - Descrição visual detalhada da cena/imagem de fundo
    - Direção criativa da Fase 4 (paleta, atmosfera, estilo)
-   - Copy exato que deve aparecer na imagem
-   - Instruções de layout e posicionamento
+   - APENAS marca d'água @handle no canto superior direito
    - Dimensões precisas
 3. Entregar o prompt pronto para o usuário
 4. Usuário copia e cola no https://gemini.google.com
@@ -866,9 +865,10 @@ A produção gera um **prompt completo e detalhado** que o usuário cola manualm
 ```
 
 **Importante:** 
-- O prompt deve descrever TUDO: a imagem de fundo E o texto sobreposto
+- O prompt descreve SOMENTE a cena visual — **NUNCA inclua título, subtítulo, badge, copy ou qualquer texto** na imagem
+- A imagem deve ser totalmente limpa de texto — o texto é adicionado digitalmente por cima no preview de edição
+- A única exceção é a marca d'água @handle no canto superior direito (opacidade 30-40%)
 - Nunca envie o prompt automaticamente via Chrome — sempre entregue para copy/paste manual
-- O Gemini gera a imagem completa de uma vez (fundo + texto)
 
 ---
 
@@ -928,34 +928,20 @@ Exemplo: "Paleta: preto profundo (#0A0A0A), laranja intenso (#FF6A00), branco pu
 
 TEXTO NA IMAGEM:
 
-Marca d'água do Instagram (múltiplas posições):
-"@[INSTAGRAM_HANDLE]" repetido em 3-5 posições estratégicas da imagem:
-- Canto superior direito (margem 80px do topo e direita)
-- Canto inferior esquerdo (margem 80px da base e esquerda)
-- Centro da imagem (opcional, se não interferir com elementos principais)
-- Canto superior esquerdo (opcional, margem 120px do topo para não sobrepor badge)
-- Canto inferior direito (opcional, margem 80px da base e direita)
-Opacidade: 30-40% (marca d'água sutil, semi-transparente, não atrapalha visualização mas protege conteúdo)
-Fonte: sans-serif regular ou light, tamanho pequeno/médio
-Cor: branca com opacidade reduzida (ou preta se fundo for muito claro)
+Marca d'água (ÚNICO texto permitido na imagem):
+"@[INSTAGRAM_HANDLE]" — canto superior direito, margem 80px do topo e da direita
+Opacidade: 30-40% (semi-transparente)
+Fonte: sans-serif regular/light, tamanho pequeno
+Cor: branca com opacidade (ou preta se fundo claro)
 
-Badge (canto superior esquerdo):
-"[TEXTO DO BADGE]"
-
-Título principal (centralizado, letras grandes e impactantes):
-"[TEXTO DO TÍTULO]"
-
-Subtítulo (abaixo do título, letras menores):
-"[TEXTO DO SUBTÍTULO]"
+NÃO inclua na imagem: título, subtítulo, badge, copy, chamada, número, emoji ou qualquer outro texto.
+O texto do post será adicionado digitalmente por cima no preview de edição.
 
 LAYOUT E COMPOSIÇÃO:
-- Marcas d'água "@[INSTAGRAM_HANDLE]" distribuídas em 3-5 pontos (cantos e/ou centro) com 30-40% opacidade
-- Badge no topo esquerdo com fundo [COR] e margem de 80px
-- Texto alinhado à esquerda/centro conforme o nicho
-- Título principal ocupa terço superior da imagem
-- Fundo deve ter contraste suficiente para texto branco ser legível
-- Margem mínima de 80px em todos os lados para elementos principais (título, badge)
-- Marcas d'água podem ficar mais próximas das bordas (40-60px)
+- Imagem totalmente limpa — apenas a cena visual e a marca d'água no canto superior direito
+- Composição pensada para receber texto sobreposto na área central
+- Fundo com gradiente ou áreas escuras/claras que criem contraste para o texto que será adicionado depois
+- Margem mínima 80px para a marca d'água
 
 FORMATO:
 Vertical 4:5, 1080 pixels de largura por 1350 pixels de altura
@@ -1042,32 +1028,20 @@ Exemplo: "Paleta: laranja SLS (#FF6A00), branco Orion (#FFFFFF), azul NASA (#0B3
 
 TEXTO NA IMAGEM:
 
-Marca d'água do Instagram (múltiplas posições):
-"@[INSTAGRAM_HANDLE]" repetido em 3-5 posições estratégicas:
-- Canto superior direito (margem 80px)
-- Canto inferior esquerdo (margem 80px)
-- Centro (opcional, se não interferir)
-- Canto superior esquerdo (opcional, margem 120px se houver badge)
-- Canto inferior direito (opcional, margem 80px)
+Marca d'água (ÚNICO texto permitido na imagem):
+"@[INSTAGRAM_HANDLE]" — canto superior direito, margem 80px do topo e da direita
 Opacidade: 30-40% (semi-transparente)
-Fonte: sans-serif regular/light, tamanho pequeno/médio
+Fonte: sans-serif regular/light, tamanho pequeno
 Cor: branca com opacidade (ou preta se fundo claro)
 
-Badge opcional no topo:
-"[BADGE]"
-
-Título principal (centro ou parte superior, letras grandes):
-"[TÍTULO PRINCIPAL]"
-
-Subtítulo (abaixo, letras menores):
-"[SUBTÍTULO]"
+NÃO inclua na imagem: título, subtítulo, badge, copy, chamada, número, emoji ou qualquer outro texto.
+O texto do post será adicionado digitalmente por cima no preview de edição.
 
 LAYOUT:
-- Marcas d'água distribuídas em 3-5 pontos com 30-40% opacidade
-- Composição [centralizada/alinhada à esquerda] conforme o nicho
-- Texto bem legível com contraste adequado
-- Margem mínima 80px para elementos principais
-- Marcas d'água podem ficar mais próximas das bordas (40-60px)
+- Imagem totalmente limpa — apenas a cena visual e a marca d'água no canto superior direito
+- Composição pensada para receber texto sobreposto na área central
+- Fundo com áreas de contraste que facilitem a leitura do texto adicionado depois
+- Margem mínima 80px para a marca d'água
 
 FORMATO:
 Vertical 4:5, 1080×1350 pixels
@@ -1122,27 +1096,20 @@ ESTILO E ATMOSFERA:
 
 TEXTO NA IMAGEM:
 
-Marca d'água do Instagram (múltiplas posições):
-"@[INSTAGRAM_HANDLE]" repetido em 3-5 posições estratégicas:
-- Canto superior direito (margem 200px do topo - zona de interface, 80px da direita)
-- Canto inferior esquerdo (margem 250px da base - zona de interface, 80px da esquerda)
-- Centro vertical da tela (opcional, se não interferir com texto principal)
-- Canto superior esquerdo (opcional, margem 200px do topo, 80px da esquerda)
-- Canto inferior direito (opcional, margem 250px da base, 80px da direita)
+Marca d'água (ÚNICO texto permitido na imagem):
+"@[INSTAGRAM_HANDLE]" — canto superior direito, margem 200px do topo (respeita zona de interface do Stories) e 80px da direita
 Opacidade: 30-40% (semi-transparente)
-Fonte: sans-serif regular/light, tamanho pequeno/médio
+Fonte: sans-serif regular/light, tamanho pequeno
 Cor: branca com opacidade (ou preta se fundo claro)
 
-No centro da tela, em letras GRANDES e legíveis:
-"[TEXTO PRINCIPAL - máx 5-8 palavras]"
+NÃO inclua na imagem: título, subtítulo, copy, chamada, número, emoji ou qualquer outro texto.
+O texto do post será adicionado digitalmente por cima no preview de edição.
 
 LAYOUT:
-- Marcas d'água distribuídas em 3-5 pontos com 30-40% opacidade
-- @ respeitando zonas de interface do Stories (200px topo, 250px base)
-- Texto centralizado verticalmente
-- Evitar texto nos 200px superiores e 250px inferiores (zonas de interface)
-- Texto muito grande (será visto em movimento)
-- Contraste forte para legibilidade
+- Imagem totalmente limpa — apenas a cena visual e a marca d'água no canto superior direito
+- Composição pensada para receber texto sobreposto na área central
+- Evitar elementos visuais nos 200px superiores e 250px inferiores (zonas de interface do Stories)
+- Fundo com áreas de contraste que facilitem a leitura do texto adicionado depois
 
 FORMATO:
 Vertical 9:16 OBRIGATÓRIO, 1080 pixels de largura por 1920 pixels de altura (proporção exata 9:16)
@@ -1217,29 +1184,20 @@ ESTILO E ATMOSFERA:
 
 TEXTO NA IMAGEM:
 
-Marca d'água do Instagram (múltiplas posições):
-"@[INSTAGRAM_HANDLE]" repetido em 3-5 posições estratégicas:
-- Canto superior direito (margem 200px do topo - zona de interface, 80px da direita)
-- Canto inferior esquerdo (margem 250px da base - zona de interface, 80px da esquerda)
-- Centro (opcional, se não interferir com título)
-- Canto superior esquerdo (opcional, margem 220px do topo para não sobrepor badge, 80px da esquerda)
-- Canto inferior direito (opcional, margem 250px da base, 80px da direita)
+Marca d'água (ÚNICO texto permitido na imagem):
+"@[INSTAGRAM_HANDLE]" — canto superior direito, margem 200px do topo (respeita zona de interface) e 80px da direita
 Opacidade: 30-40% (semi-transparente)
-Fonte: sans-serif regular/light, tamanho pequeno/médio
+Fonte: sans-serif regular/light, tamanho pequeno
 Cor: branca com opacidade (ou preta se fundo claro)
 
-Título do Reels (centro ou parte superior, letras grandes):
-"[TÍTULO DO REELS]"
-
-Badge opcional no topo:
-"[TEMA]"
+NÃO inclua na imagem: título, subtítulo, badge, copy, chamada, número, emoji ou qualquer outro texto.
+O texto do post será adicionado digitalmente por cima no preview de edição.
 
 LAYOUT:
-- Marcas d'água distribuídas em 3-5 pontos com 30-40% opacidade
-- @ respeitando zonas de interface (200px topo, 250px base)
-- Composição que funcione em miniatura (grid do perfil)
-- Texto legível mesmo em thumbnail pequeno
-- Evitar zonas de interface (200px topo, 250px base)
+- Imagem totalmente limpa — apenas a cena visual e a marca d'água no canto superior direito
+- Composição pensada para funcionar em miniatura (grid do perfil) e receber texto sobreposto
+- Evitar elementos visuais nos 200px superiores e 250px inferiores (zonas de interface)
+- Fundo com áreas de contraste que facilitem a leitura do texto adicionado depois
 
 FORMATO:
 Vertical 9:16, 1080×1920 pixels
